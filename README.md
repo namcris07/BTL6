@@ -33,7 +33,7 @@ A cyberpunk-themed multiplayer 3D ninja battle arena game where players fight in
 
 1. Clone the repository:
    ```bash
-   git clone https://github.com/Frankie2030/Game-Programming-A5
+   git clone https://github.com/namcris07/BTL6.git
    ```
 
 2. Install dependencies:
