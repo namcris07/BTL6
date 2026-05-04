@@ -1,0 +1,961 @@
+.menuContainer {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  background-image: url('/resources/images/game_a5_background_v2.png');
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center;
+  pointer-events: auto;
+  z-index: 2000;
+}
+
+/* Desktop: Left sidebar menu */
+@media (min-width: 769px) {
+  .menuContainer {
+    justify-content: flex-start;
+    align-items: center;
+  }
+
+  /* Enhanced desktop menu styling */
+  .menuContainer :global([class*="mantine-Paper-root"]) {
+    width: 520px !important;
+    height: 100% !important;
+    padding: 50px 40px !important;
+    border-radius: 0 !important;
+    border-right: 1px solid rgba(255, 255, 255, 0.15) !important;
+    background: linear-gradient(135deg, rgba(0, 0, 0, 0.9) 0%, rgba(20, 20, 30, 0.9) 100%) !important;
+    backdrop-filter: blur(30px) !important;
+    box-shadow: 
+      0 0 40px rgba(0, 0, 0, 0.6),
+      inset -1px 0 0 rgba(255, 255, 255, 0.1),
+      inset 0 1px 0 rgba(255, 255, 255, 0.05) !important;
+    position: relative !important;
+    left: 0 !important;
+    overflow-y: auto !important;
+    overflow-x: visible !important;
+    box-sizing: border-box !important;
+  }
+
+  .menuContainer :global([class*="mantine-Stack-root"]) {
+    gap: 24px !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    box-sizing: border-box !important;
+    overflow: visible !important;
+  }
+
+  .menuContainer :global([class*="mantine-Button-root"]) {
+    min-height: 64px !important;
+    font-size: 20px !important;
+    font-weight: 600 !important;
+    border-radius: 14px !important;
+    padding: 20px 28px !important;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+    letter-spacing: 0.3px !important;
+  }
+
+  .menuContainer :global([class*="mantine-Button-root"]:not([data-variant="light"])) {
+    background: linear-gradient(135deg, #4caf50 0%, #45a049 100%) !important;
+    box-shadow: 
+      0 6px 20px rgba(76, 175, 80, 0.4),
+      inset 0 1px 0 rgba(255, 255, 255, 0.25),
+      0 0 0 1px rgba(255, 255, 255, 0.1) !important;
+    border: none !important;
+  }
+
+  .menuContainer :global([class*="mantine-Button-root"]:not([data-variant="light"]):hover) {
+    background: linear-gradient(135deg, #45a049 0%, #3d8b40 100%) !important;
+    transform: translateX(8px) translateY(-2px) !important;
+    box-shadow: 
+      0 8px 24px rgba(76, 175, 80, 0.5),
+      inset 0 1px 0 rgba(255, 255, 255, 0.3),
+      0 0 0 1px rgba(255, 255, 255, 0.15) !important;
+  }
+
+  .menuContainer :global([class*="mantine-Button-root"]:not([data-variant="light"]):active) {
+    transform: translateX(4px) translateY(0) !important;
+    box-shadow: 
+      0 4px 12px rgba(76, 175, 80, 0.4),
+      inset 0 1px 0 rgba(255, 255, 255, 0.2) !important;
+  }
+
+  .menuContainer :global([class*="mantine-Button-root"][data-variant="light"]) {
+    background: rgba(255, 255, 255, 0.06) !important;
+    color: rgba(255, 255, 255, 0.85) !important;
+    border: 1px solid rgba(255, 255, 255, 0.12) !important;
+    backdrop-filter: blur(10px) !important;
+    box-shadow: 
+      0 2px 8px rgba(0, 0, 0, 0.3),
+      inset 0 1px 0 rgba(255, 255, 255, 0.08) !important;
+  }
+
+  .menuContainer :global([class*="mantine-Button-root"][data-variant="light"]:hover) {
+    background: rgba(255, 255, 255, 0.1) !important;
+    border-color: rgba(255, 255, 255, 0.2) !important;
+    transform: translateX(6px) !important;
+    box-shadow: 
+      0 4px 12px rgba(0, 0, 0, 0.4),
+      inset 0 1px 0 rgba(255, 255, 255, 0.12) !important;
+  }
+
+  .menuContainer :global([class*="mantine-Button-root"][data-variant="light"]:active) {
+    transform: translateX(3px) !important;
+    box-shadow: 
+      0 2px 6px rgba(0, 0, 0, 0.3),
+      inset 0 1px 0 rgba(255, 255, 255, 0.1) !important;
+  }
+
+  .menuContainer :global([class*="mantine-Button-root"]:disabled) {
+    background: rgba(255, 255, 255, 0.05) !important;
+    color: rgba(255, 255, 255, 0.3) !important;
+    border-color: rgba(255, 255, 255, 0.05) !important;
+    opacity: 0.5 !important;
+    cursor: not-allowed !important;
+    transform: none !important;
+  }
+
+  /* Add subtle animation to menu container */
+  .menuContainer :global([class*="mantine-Paper-root"])::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(
+      180deg,
+      rgba(100, 150, 255, 0.03) 0%,
+      transparent 50%,
+      rgba(100, 150, 255, 0.02) 100%
+    );
+    pointer-events: none;
+    border-radius: inherit;
+  }
+
+  /* Enhanced Select styling for desktop */
+  .menuContainer :global([class*="mantine-Select-input"]) {
+    background: rgba(255, 255, 255, 0.08) !important;
+    border: 1px solid rgba(255, 255, 255, 0.15) !important;
+    color: #fff !important;
+    border-radius: 12px !important;
+    padding: 14px 16px !important;
+    font-size: 16px !important;
+    backdrop-filter: blur(10px) !important;
+    transition: all 0.2s ease !important;
+  }
+
+  .menuContainer :global([class*="mantine-Select-input"]:hover) {
+    background: rgba(255, 255, 255, 0.12) !important;
+    border-color: rgba(255, 255, 255, 0.25) !important;
+  }
+
+  .menuContainer :global([class*="mantine-Select-input"]:focus) {
+    background: rgba(255, 255, 255, 0.15) !important;
+    border-color: rgba(76, 175, 80, 0.5) !important;
+    box-shadow: 0 0 0 3px rgba(76, 175, 80, 0.2) !important;
+  }
+
+  .menuContainer :global([class*="mantine-Select-label"]) {
+    color: rgba(255, 255, 255, 0.8) !important;
+    font-weight: 600 !important;
+    text-transform: uppercase !important;
+    letter-spacing: 0.5px !important;
+    font-size: 13px !important;
+    margin-bottom: 8px !important;
+  }
+
+  /* Ensure Select dropdown doesn't overflow */
+  .menuContainer :global([class*="mantine-Select-root"]) {
+    width: 100% !important;
+    max-width: 100% !important;
+    box-sizing: border-box !important;
+  }
+
+  .menuContainer :global([class*="mantine-Select-dropdown"]) {
+    max-width: calc(520px - 80px) !important;
+    box-sizing: border-box !important;
+  }
+
+  /* Ensure buttons in modals don't truncate text */
+  .menuContainer :global([class*="mantine-Modal-content"]) :global([class*="mantine-Button-root"]) {
+    white-space: nowrap !important;
+    overflow: visible !important;
+    text-overflow: clip !important;
+    min-width: fit-content !important;
+  }
+
+  .menuContainer :global([class*="mantine-Modal-content"]) :global([class*="mantine-Group-root"]) {
+    gap: 12px !important;
+  }
+
+  /* Ensure Paper elements inside menu don't overflow and are transparent */
+  .menuContainer :global([class*="mantine-Paper-root"]) :global([class*="mantine-Paper-root"]) {
+    max-width: 100% !important;
+    box-sizing: border-box !important;
+    overflow: visible !important;
+    background: rgba(255, 255, 255, 0.05) !important;
+    border-color: rgba(255, 255, 255, 0.1) !important;
+  }
+
+  /* Ensure Groups (slider containers) fit within sidebar */
+  .menuContainer :global([class*="mantine-Group-root"]) {
+    max-width: 100% !important;
+    box-sizing: border-box !important;
+    overflow: visible !important;
+  }
+
+  /* Ensure Sliders fit within their containers */
+  .menuContainer :global([class*="mantine-Slider-root"]) {
+    max-width: 100% !important;
+    box-sizing: border-box !important;
+  }
+}
+
+/* Mobile responsive adjustments */
+@media (max-width: 768px) {
+  .menuContainer {
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+  }
+
+  /* Hide the left sidebar on mobile, show centered menu */
+  .menuContainer :global([class*="mantine-Paper-root"]) {
+    position: relative !important;
+    left: auto !important;
+    width: 100% !important;
+    max-width: 420px !important;
+    height: auto !important;
+    max-height: 90vh !important;
+    padding: 32px 24px !important;
+    border-radius: 24px !important;
+    background: linear-gradient(135deg, rgba(0, 0, 0, 0.9) 0%, rgba(20, 20, 30, 0.85) 100%) !important;
+    backdrop-filter: blur(25px) !important;
+    border: 1px solid rgba(255, 255, 255, 0.15) !important;
+    box-shadow: 
+      0 25px 70px rgba(0, 0, 0, 0.8),
+      inset 0 1px 0 rgba(255, 255, 255, 0.15) !important;
+  }
+
+
+  .menuContainer :global([class*="mantine-Button-root"]) {
+    min-height: 60px !important;
+    font-size: 18px !important;
+    font-weight: 600 !important;
+    border-radius: 14px !important;
+    padding: 18px 24px !important;
+    transition: all 0.2s ease !important;
+  }
+
+  .menuContainer :global([class*="mantine-Button-root"]:not([data-variant="light"])) {
+    background: linear-gradient(135deg, #4caf50 0%, #45a049 100%) !important;
+    box-shadow: 
+      0 4px 14px rgba(76, 175, 80, 0.4),
+      inset 0 1px 0 rgba(255, 255, 255, 0.2) !important;
+  }
+
+  .menuContainer :global([class*="mantine-Button-root"]:not([data-variant="light"]):active) {
+    transform: scale(0.97) !important;
+    box-shadow: 
+      0 2px 8px rgba(76, 175, 80, 0.3),
+      inset 0 1px 0 rgba(255, 255, 255, 0.2) !important;
+  }
+
+  .menuContainer :global([class*="mantine-Button-root"][data-variant="light"]) {
+    background: rgba(255, 255, 255, 0.08) !important;
+    color: rgba(255, 255, 255, 0.9) !important;
+    border: 1px solid rgba(255, 255, 255, 0.15) !important;
+    backdrop-filter: blur(10px) !important;
+  }
+
+  .menuContainer :global([class*="mantine-Button-root"][data-variant="light"]:active) {
+    background: rgba(255, 255, 255, 0.12) !important;
+    transform: scale(0.97) !important;
+  }
+
+  .menuContainer :global([class*="mantine-Button-root"]:disabled) {
+    background: rgba(255, 255, 255, 0.1) !important;
+    color: rgba(255, 255, 255, 0.4) !important;
+    opacity: 0.6 !important;
+  }
+
+  .menu {
+    width: 95%;
+    max-width: 450px;
+    padding: 30px 24px;
+    height: auto;
+    max-height: 90vh;
+    overflow-y: auto;
+    border-radius: 20px;
+    background: linear-gradient(135deg, rgba(0, 0, 0, 0.85) 0%, rgba(20, 20, 30, 0.8) 100%);
+    backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow: 
+      0 20px 60px rgba(0, 0, 0, 0.7),
+      inset 0 1px 0 rgba(255, 255, 255, 0.1);
+  }
+
+  .menuButtons {
+    gap: 16px;
+  }
+
+  .mainMenuButton {
+    padding: 18px 24px;
+    font-size: 20px;
+    border-radius: 12px;
+    min-height: 56px;
+    font-weight: 600;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    transition: all 0.2s ease;
+  }
+
+  .mainMenuButton:active {
+    transform: scale(0.98);
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+  }
+
+  .sectionTitle {
+    font-size: 16px;
+    margin-bottom: 12px;
+  }
+
+  .contentTitle {
+    font-size: 28px;
+    margin-bottom: 24px;
+  }
+
+  .topRightNameDisplay {
+    top: 12px;
+    right: 12px;
+    padding: 10px 16px;
+    font-size: 14px;
+    min-width: 100px;
+  }
+
+  .playerNameText {
+    font-size: 16px;
+  }
+
+  .menuDialog {
+    width: 90%;
+    max-width: 400px;
+    padding: 24px;
+    border-radius: 16px;
+  }
+
+  .modalDialog {
+    width: 90%;
+    max-width: 350px;
+    padding: 24px;
+    border-radius: 16px;
+  }
+
+  .hostButton,
+  .joinButton {
+    padding: 16px 20px;
+    font-size: 18px;
+    min-height: 52px;
+    border-radius: 12px;
+    font-weight: 600;
+  }
+
+  .backButton {
+    padding: 14px 20px;
+    font-size: 16px;
+    min-height: 48px;
+    border-radius: 12px;
+  }
+}
+
+/* Extra small mobile devices */
+@media (max-width: 600) {
+  .menuContainer {
+    padding: 15px;
+  }
+
+  .menuContainer :global([class*="mantine-Paper-root"]) {
+    max-width: 100% !important;
+    padding: 28px 20px !important;
+    border-radius: 20px !important;
+  }
+
+  .menuContainer :global([class*="mantine-Stack-root"]) {
+    gap: 16px !important;
+  }
+
+  .menuContainer :global([class*="mantine-Button-root"]) {
+    min-height: 56px !important;
+    font-size: 16px !important;
+    padding: 16px 20px !important;
+    border-radius: 12px !important;
+  }
+
+  .menu {
+    width: 98%;
+    padding: 24px 20px;
+    max-height: 95vh;
+  }
+
+  .mainMenuButton {
+    padding: 16px 20px;
+    font-size: 18px;
+    min-height: 52px;
+  }
+
+  .menuButtons {
+    gap: 14px;
+  }
+
+  .contentTitle {
+    font-size: 24px;
+    margin-bottom: 20px;
+  }
+
+  .topRightNameDisplay {
+    top: 10px;
+    right: 10px;
+    padding: 8px 14px;
+    font-size: 12px;
+    min-width: 90px;
+  }
+
+  .playerNameText {
+    font-size: 14px;
+  }
+
+  .menuDialog,
+  .modalDialog {
+    width: 95%;
+    padding: 20px;
+  }
+
+  .hostButton,
+  .joinButton {
+    padding: 14px 18px;
+    font-size: 16px;
+    min-height: 48px;
+  }
+}
+
+.menu {
+  pointer-events: auto;
+  background: linear-gradient(135deg, rgba(0, 0, 0, 0.8) 0%, rgba(20, 20, 30, 0.75) 100%);
+  padding: 40px;
+  text-align: left;
+  width: 400px;
+  height: 100%;
+  box-sizing: border-box;
+  backdrop-filter: blur(15px);
+  border-right: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 
+    0 0 30px rgba(0, 0, 0, 0.6),
+    inset 0 1px 0 rgba(255, 255, 255, 0.05);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  transition: all 0.3s ease;
+}
+
+.connectionStatus {
+  margin-bottom: 30px;
+  color: #fff;
+  font-size: 16px;
+}
+
+.menuSection {
+  margin-bottom: 20px;
+  padding-bottom: 20px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.menuSection:last-child {
+  border-bottom: none;
+  margin-bottom: 0;
+  padding-bottom: 0;
+}
+
+.sectionTitle {
+  color: #fff;
+  font-size: 18px;
+  margin-bottom: 10px;
+  text-align: left;
+}
+
+.audioControl {
+  display: flex;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.audioLabel {
+  color: #fff;
+  width: 120px;
+  text-align: left;
+}
+
+.audioSlider {
+  flex: 1;
+}
+
+.audioValue {
+  color: #fff;
+  width: 40px;
+  text-align: right;
+}
+
+.mainMenu {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.menuButtons {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.mainMenuButton {
+  background: linear-gradient(135deg, #4caf50 0%, #45a049 100%);
+  color: white;
+  border: none;
+  border-radius: 10px;
+  padding: 16px 24px;
+  font-size: 20px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  text-align: left;
+  position: relative;
+  width: 100%;
+  font-weight: 600;
+  box-shadow: 
+    0 4px 12px rgba(76, 175, 80, 0.3),
+    inset 0 1px 0 rgba(255, 255, 255, 0.2);
+  min-height: 52px;
+  display: flex;
+  align-items: center;
+}
+
+.mainMenuButton:hover {
+  background: linear-gradient(135deg, #45a049 0%, #3d8b40 100%);
+  transform: translateY(-2px);
+  box-shadow: 
+    0 6px 16px rgba(76, 175, 80, 0.4),
+    inset 0 1px 0 rgba(255, 255, 255, 0.2);
+}
+
+.mainMenuButton:active {
+  transform: translateY(0);
+  box-shadow: 
+    0 2px 8px rgba(76, 175, 80, 0.3),
+    inset 0 1px 0 rgba(255, 255, 255, 0.2);
+}
+
+.mainMenuButton:disabled {
+  background-color: #cccccc;
+  cursor: not-allowed;
+}
+
+.disabledButton {
+  background-color: #cccccc;
+  cursor: not-allowed;
+}
+
+.buttonAlert {
+  position: absolute;
+  right: 15px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 20px;
+  color: #ff9800;
+}
+
+.menuOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.7);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.menuDialog {
+  background: linear-gradient(135deg, rgba(0, 0, 0, 0.95) 0%, rgba(20, 20, 30, 0.9) 100%);
+  padding: 30px;
+  border-radius: 16px;
+  width: 400px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(20px);
+  box-shadow: 
+    0 20px 60px rgba(0, 0, 0, 0.7),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1);
+}
+
+.dialogTitle {
+  color: white;
+  font-size: 24px;
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+.hostIdInput {
+  padding: 10px;
+  margin: 10px 0;
+  width: 100%;
+  border-radius: 5px;
+  border: 1px solid #555;
+  background-color: white;
+  color: black;
+  font-size: 16px;
+  box-sizing: border-box;
+  cursor: pointer;
+}
+
+.hostButton {
+  background: linear-gradient(135deg, #4caf50 0%, #45a049 100%);
+  color: white;
+  border: none;
+  border-radius: 10px;
+  padding: 14px 20px;
+  margin: 20px 0 10px;
+  font-size: 18px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  width: 100%;
+  font-weight: 600;
+  box-shadow: 0 4px 12px rgba(76, 175, 80, 0.3);
+  min-height: 48px;
+}
+
+.hostButton:hover {
+  background: linear-gradient(135deg, #45a049 0%, #3d8b40 100%);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(76, 175, 80, 0.4);
+}
+
+.hostButton:active {
+  transform: translateY(0);
+  box-shadow: 0 2px 8px rgba(76, 175, 80, 0.3);
+}
+
+.joinInput {
+  padding: 10px;
+  margin: 10px 0;
+  width: 100%;
+  border-radius: 5px;
+  border: 1px solid #555;
+  background-color: white;
+  color: black;
+  font-size: 16px;
+  box-sizing: border-box;
+}
+
+.joinButton {
+  background: linear-gradient(135deg, #2196f3 0%, #0b7dda 100%);
+  color: white;
+  border: none;
+  border-radius: 10px;
+  padding: 14px 20px;
+  margin: 20px 0 10px;
+  font-size: 18px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  width: 100%;
+  font-weight: 600;
+  box-shadow: 0 4px 12px rgba(33, 150, 243, 0.3);
+  min-height: 48px;
+}
+
+.joinButton:hover {
+  background: linear-gradient(135deg, #0b7dda 0%, #0a6bc2 100%);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(33, 150, 243, 0.4);
+}
+
+.joinButton:active {
+  transform: translateY(0);
+  box-shadow: 0 2px 8px rgba(33, 150, 243, 0.3);
+}
+
+.joinButton:disabled {
+  background-color: #cccccc;
+  cursor: not-allowed;
+}
+
+.backButton {
+  background: linear-gradient(135deg, #555 0%, #444 100%);
+  color: white;
+  border: none;
+  border-radius: 10px;
+  padding: 12px 20px;
+  margin-top: 10px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  width: 100%;
+  font-weight: 500;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+  min-height: 44px;
+}
+
+.backButton:hover {
+  background: linear-gradient(135deg, #444 0%, #333 100%);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+}
+
+.backButton:active {
+  transform: translateY(0);
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3);
+}
+
+/* Settings and Credits Styles */
+.menuContent {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+}
+
+.contentTitle {
+  color: white;
+  font-size: 32px;
+  margin-bottom: 30px;
+  text-align: left;
+}
+
+.settingsSection {
+  margin-bottom: 30px;
+}
+
+.settingsSectionTitle {
+  color: white;
+  font-size: 20px;
+  margin-bottom: 15px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+  padding-bottom: 5px;
+}
+
+.creditsSection {
+  margin-bottom: 30px;
+}
+
+.creditItem {
+  margin-bottom: 20px;
+}
+
+.creditName {
+  color: white;
+  font-size: 20px;
+  font-weight: bold;
+}
+
+.creditEmail {
+  color: #aaa;
+  font-size: 16px;
+  margin-top: 5px;
+}
+
+/* Tooltip Styles */
+.tooltipWrapper {
+  position: relative;
+  display: inline-block;
+  width: 100%;
+}
+
+.tooltipWrapper:hover .tooltip {
+  visibility: visible;
+  opacity: 1;
+}
+
+.tooltip {
+  visibility: hidden;
+  width: 200px;
+  background-color: #555;
+  color: #fff;
+  text-align: center;
+  border-radius: 6px;
+  padding: 5px 0;
+  position: absolute;
+  z-index: 1;
+  bottom: 125%; /* Position above the button */
+  left: 50%;
+  margin-left: -100px; /* Center the tooltip */
+  opacity: 0;
+  transition: opacity 0.3s;
+  font-size: 14px;
+  pointer-events: none;
+}
+
+.tooltip::after {
+  content: '';
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  margin-left: -5px;
+  border-width: 5px;
+  border-style: solid;
+  border-color: #555 transparent transparent transparent;
+}
+
+/* Top Right Name Display */
+.topRightNameDisplay {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  background: linear-gradient(135deg, rgba(0, 0, 0, 0.85) 0%, rgba(20, 20, 30, 0.8) 100%);
+  backdrop-filter: blur(15px);
+  padding: 12px 18px;
+  border-radius: 32px;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  z-index: 2000;
+  min-width: 120px;
+  box-shadow: 
+    0 4px 16px rgba(0, 0, 0, 0.4),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1);
+  transition: all 0.2s ease;
+}
+
+.topRightNameDisplay:hover {
+  border-color: rgba(255, 255, 255, 0.25);
+  box-shadow: 
+    0 6px 20px rgba(0, 0, 0, 0.5),
+    inset 0 1px 0 rgba(255, 255, 255, 0.15);
+  transform: translateY(-2px);
+}
+
+/* Desktop: Enhanced name display */
+@media (min-width: 769px) {
+  .topRightNameDisplay {
+    top: 24px;
+    right: 24px;
+    padding: 14px 20px;
+    min-width: 140px;
+    border-radius: 36px;
+    z-index: 2001;
+  }
+}
+
+.playerNameText {
+  color: white;
+  font-size: 18px;
+  font-weight: bold;
+}
+
+.editNameButton {
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: #aaa;
+  font-size: 16px;
+  padding: 5px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: color 0.3s;
+}
+
+.editNameButton:hover {
+  color: white;
+}
+
+/* Modal Styles */
+.modalOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.7);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 2000;
+}
+
+.modalDialog {
+  background: linear-gradient(135deg, rgba(0, 0, 0, 0.95) 0%, rgba(20, 20, 30, 0.9) 100%);
+  padding: 30px;
+  border-radius: 16px;
+  width: 350px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(20px);
+  box-shadow: 
+    0 20px 60px rgba(0, 0, 0, 0.7),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1);
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.modalTitle {
+  color: white;
+  font-size: 24px;
+  margin: 0 0 10px 0;
+  text-align: center;
+}
+
+.modalInput {
+  padding: 10px;
+  border-radius: 5px;
+  border: 1px solid #555;
+  background-color: white;
+  color: black;
+  font-size: 16px;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.modalButtons {
+  display: flex;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+.saveButton {
+  flex: 1;
+  background-color: #4caf50;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  padding: 10px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.saveButton:hover {
+  background-color: #45a049;
+}
+
+.cancelButton {
+  flex: 1;
+  background-color: #555;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  padding: 10px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.cancelButton:hover {
+  background-color: #444;
+}

@@ -1,0 +1,118 @@
+.joystick {
+  position: fixed;
+  bottom: 120px;
+  left: 30px;
+  width: 120px;
+  height: 120px;
+  background: rgba(0, 0, 0, 0.6);
+  border: 3px solid rgba(255, 255, 255, 0.3);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 2000;
+  pointer-events: auto;
+  backdrop-filter: blur(10px);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+}
+
+.joystickKnob {
+  width: 50px;
+  height: 50px;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.9) 0%, rgba(200, 200, 200, 0.8) 100%);
+  border: 2px solid rgba(255, 255, 255, 0.5);
+  border-radius: 50%;
+  box-shadow: 
+    0 4px 12px rgba(0, 0, 0, 0.4),
+    inset 0 2px 4px rgba(255, 255, 255, 0.3);
+  transition: transform 0.1s ease-out;
+  pointer-events: none;
+}
+
+.mobileSkills {
+  position: fixed;
+  bottom: 30px;
+  right: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  z-index: 2000;
+  pointer-events: auto;
+}
+
+.mobileSkillButton {
+  width: 70px;
+  height: 70px;
+  border-radius: 12px;
+  background: linear-gradient(135deg, rgba(30, 30, 40, 0.95) 0%, rgba(20, 20, 30, 0.9) 100%);
+  border: 2px solid rgba(255, 255, 255, 0.2);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  backdrop-filter: blur(10px);
+  box-shadow: 
+    0 4px 12px rgba(0, 0, 0, 0.5),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1);
+  transition: all 0.2s ease;
+  padding: 8px;
+  color: white;
+  font-size: 10px;
+  font-weight: 600;
+  cursor: pointer;
+  font-family: inherit;
+  outline: none;
+}
+
+.mobileSkillButton:active {
+  transform: scale(0.95);
+  background: linear-gradient(135deg, rgba(50, 50, 60, 0.95) 0%, rgba(40, 40, 50, 0.9) 100%);
+  box-shadow: 
+    0 2px 6px rgba(0, 0, 0, 0.5),
+    inset 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.skillLabel {
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: rgba(255, 255, 255, 0.9);
+}
+
+/* Hide mobile controls on desktop, but keep active effects visible */
+@media (min-width: 768px) {
+  .joystick,
+  .mobileSkills {
+    display: none;
+  }
+}
+
+/* Responsive adjustments for smaller screens */
+@media (max-width: 480px) {
+  .joystick {
+    width: 100px;
+    height: 100px;
+    bottom: 100px;
+    left: 20px;
+  }
+
+  .joystickKnob {
+    width: 40px;
+    height: 40px;
+  }
+
+  .mobileSkills {
+    bottom: 20px;
+    right: 15px;
+    gap: 10px;
+  }
+
+  .mobileSkillButton {
+    width: 60px;
+    height: 60px;
+    font-size: 9px;
+  }
+}
+

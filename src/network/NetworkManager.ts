@@ -1,0 +1,173 @@
+import Peer from 'peerjs';
+import type { DataConnection } from 'peerjs';
+import type { NetworkMessage } from '../common/messages';
+
+export class NetworkManager {
+  private peer: Peer;
+  private connections: DataConnection[] = [];
+  private _isHost: boolean = false;
+  private _playerName: string = '';
+  private _playerAvatar: string | null = null;
+
+  public get isHost(): boolean {
+    return this._isHost;
+  }
+
+  public get peerId(): string {
+    return this.peer.id;
+  }
+
+  public get playerName(): string {
+    return this._playerName;
+  }
+
+  public set playerName(name: string) {
+    this._playerName = name;
+    // Save to localStorage for persistence
+    localStorage.setItem('player_name', name);
+    // Dispatch event to notify UI of name change
+    window.dispatchEvent(new CustomEvent('player-name-changed', { detail: name }));
+  }
+
+  public get playerAvatar(): string | null {
+    return this._playerAvatar;
+  }
+
+  public set playerAvatar(avatar: string | null) {
+    this._playerAvatar = avatar;
+    if (avatar) {
+      localStorage.setItem('player_avatar', avatar);
+    } else {
+      localStorage.removeItem('player_avatar');
+    }
+  }
+
+  constructor() {
+    this.peer = new Peer();
+    this.setupPeerEvents();
+  }
+
+  public hostGame() {
+    this._isHost = true;
+  }
+
+  public joinGame(hostId: string) {
+    this._isHost = false;
+    const conn = this.peer.connect(hostId);
+    this.handleConnection(conn);
+  }
+
+  private handleConnection(conn: DataConnection) {
+    conn.on('open', () => {
+      this.connections.push(conn);
+      window.dispatchEvent(new CustomEvent('connected', { detail: conn.peer }));
+    });
+
+    conn.on('data', (data: unknown) => {
+      // Dispatch event for Game to handle
+      window.dispatchEvent(
+        new CustomEvent('network-data', {
+          detail: { from: conn.peer, data: data as NetworkMessage },
+        })
+      );
+    });
+
+    conn.on('close', () => {
+      this.connections = this.connections.filter(c => c !== conn);
+      window.dispatchEvent(new CustomEvent('player-disconnected', { detail: conn.peer }));
+    });
+
+    conn.on('error', (err) => {
+      console.error('Connection error:', err);
+      this.connections = this.connections.filter(c => c !== conn);
+      window.dispatchEvent(new CustomEvent('player-disconnected', { detail: conn.peer }));
+    });
+  }
+
+  public broadcast(data: NetworkMessage) {
+    this.connections.forEach(conn => conn.send(data));
+    // If we are host, we also need to receive the broadcast locally (as a client)
+    if (this.isHost) {
+      window.dispatchEvent(
+        new CustomEvent('network-data', { detail: { from: this.peerId, data: data } })
+      );
+    }
+  }
+
+  public sendToHost(data: NetworkMessage) {
+    if (this.isHost) {
+      // Loopback: We are the host, so we receive our own message
+      // We need to simulate receiving data from "ourselves" (client to server)
+      // The GameServer listens to 'network-data'
+      window.dispatchEvent(
+        new CustomEvent('network-data', { detail: { from: this.peerId, data: data } })
+      );
+    } else if (this.connections.length > 0) {
+      this.connections[0].send(data);
+    }
+  }
+
+  public sendToClient(peerId: string, data: NetworkMessage) {
+    if (peerId === this.peerId) {
+      // Loopback: Server sending to Host Client
+      window.dispatchEvent(
+        new CustomEvent('network-data', { detail: { from: this.peerId, data: data } })
+      );
+      return;
+    }
+
+    const conn = this.connections.find(c => c.peer === peerId);
+    if (conn) {
+      conn.send(data);
+    }
+  }
+
+  public disconnect() {
+    // Close all connections
+    this.connections.forEach(conn => {
+      conn.close();
+    });
+    this.connections = [];
+    this._isHost = false;
+    
+    // Destroy peer connection
+    if (this.peer && !this.peer.destroyed) {
+      this.peer.destroy();
+    }
+    
+    // Create new peer for reconnection
+    this.peer = new Peer();
+    this.setupPeerEvents();
+  }
+
+  private setupPeerEvents() {
+    this.peer.on('open', id => {
+      window.dispatchEvent(new CustomEvent('network-ready', { detail: id }));
+      
+      let savedName = localStorage.getItem('player_name');
+      if (!savedName) {
+        const randomId = Math.floor(Math.random() * 10000)
+          .toString()
+          .padStart(4, '0');
+        savedName = `Player${randomId}`;
+        localStorage.setItem('player_name', savedName);
+      }
+      this._playerName = savedName;
+      window.dispatchEvent(new CustomEvent('player-name-changed', { detail: savedName }));
+      
+      const savedAvatar = localStorage.getItem('player_avatar');
+      if (savedAvatar) {
+        this._playerAvatar = savedAvatar;
+      }
+    });
+
+    this.peer.on('error', err => {
+      console.error('PeerJS error:', err);
+      window.dispatchEvent(new CustomEvent('connection-error', { detail: err }));
+    });
+
+    this.peer.on('connection', conn => {
+      this.handleConnection(conn);
+    });
+  }
+}

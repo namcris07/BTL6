@@ -1,0 +1,117 @@
+.liveScoreboard {
+  position: fixed;
+  top: 80px;
+  right: 20px;
+  background: rgba(0, 0, 0, 0.85);
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-radius: 8px;
+  padding: 12px;
+  min-width: 220px;
+  backdrop-filter: blur(5px);
+  z-index: 100;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.header {
+  font-size: 12px;
+  font-weight: 700;
+  color: #ffd700;
+  text-align: center;
+  margin-bottom: 8px;
+  letter-spacing: 1px;
+  border-bottom: 1px solid rgba(255, 215, 0, 0.3);
+  padding-bottom: 4px;
+}
+
+.playerList {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.playerRow {
+  display: grid;
+  grid-template-columns: 30px 1fr auto;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 8px;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 4px;
+  transition: background 0.2s ease;
+}
+
+.playerRow:hover {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.localPlayer {
+  background: rgba(76, 175, 80, 0.2);
+  border: 1px solid rgba(76, 175, 80, 0.5);
+}
+
+.localPlayer:hover {
+  background: rgba(76, 175, 80, 0.3);
+}
+
+.rank {
+  font-size: 12px;
+  font-weight: 700;
+  color: #ffd700;
+  text-align: center;
+}
+
+.name {
+  font-size: 13px;
+  color: #fff;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.localPlayer .name {
+  color: #4caf50;
+  font-weight: 600;
+}
+
+.kills {
+  font-size: 14px;
+  font-weight: 700;
+  color: #ff6b6b;
+  text-align: right;
+  min-width: 30px;
+}
+
+.target {
+  margin-top: 8px;
+  padding-top: 8px;
+  border-top: 1px solid rgba(255, 255, 255, 0.2);
+  font-size: 11px;
+  color: #aaa;
+  text-align: center;
+}
+
+/* Mobile responsive */
+@media (max-width: 768px) {
+  .liveScoreboard {
+    top: 60px;
+    right: 10px;
+    min-width: 180px;
+    padding: 8px;
+  }
+
+  .header {
+    font-size: 11px;
+  }
+
+  .rank {
+    font-size: 11px;
+  }
+
+  .name {
+    font-size: 12px;
+  }
+
+  .kills {
+    font-size: 13px;
+  }
+}

@@ -1,0 +1,178 @@
+.modalRoot {
+  z-index: 10000 !important;
+}
+
+.modalOverlay {
+  background: rgba(0, 0, 0, 0.9) !important;
+  backdrop-filter: blur(8px);
+}
+
+.modalInner {
+  padding: 0;
+}
+
+.modalContent {
+  background: linear-gradient(135deg, rgba(26, 27, 30, 0.98), rgba(37, 38, 43, 0.98)) !important;
+  border: 2px solid rgba(255, 215, 0, 0.3);
+  border-radius: 16px;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.8);
+  padding: 32px;
+}
+
+.winnerBanner {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  padding: 24px;
+  background: linear-gradient(90deg, rgba(255, 215, 0, 0.15), rgba(255, 215, 0, 0.3), rgba(255, 215, 0, 0.15));
+  border: 2px solid rgba(255, 215, 0, 0.5);
+  border-radius: 12px;
+  margin-bottom: 8px;
+}
+
+.winnerIcon {
+  font-size: 48px;
+  color: #ffd700;
+  animation: pulse 2s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  0%, 100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  50% {
+    transform: scale(1.1);
+    opacity: 0.8;
+  }
+}
+
+.winnerText {
+  color: #ffd700;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  text-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
+}
+
+.matchInfo {
+  text-align: center;
+  padding: 12px 20px;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 8px;
+  min-width: 150px;
+}
+
+.resultsTable {
+  margin-top: 16px;
+}
+
+.resultsTable thead tr th {
+  background: rgba(255, 255, 255, 0.08);
+  color: #fff;
+  font-weight: 600;
+  text-transform: uppercase;
+  font-size: 12px;
+  letter-spacing: 1px;
+  border-bottom: 2px solid rgba(255, 215, 0, 0.3);
+}
+
+.rankHeader {
+  width: 80px;
+  text-align: center;
+}
+
+.statHeader {
+  text-align: center;
+  width: 100px;
+}
+
+.playerRow {
+  background: rgba(255, 255, 255, 0.02);
+  transition: background 0.2s ease;
+}
+
+.playerRow:hover {
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.winnerRow {
+  background: rgba(255, 215, 0, 0.15) !important;
+  border-left: 4px solid #ffd700;
+}
+
+.winnerRow:hover {
+  background: rgba(255, 215, 0, 0.2) !important;
+}
+
+.localPlayerRow {
+  background: rgba(76, 175, 80, 0.15) !important;
+  border-left: 4px solid #4caf50;
+}
+
+.localPlayerRow:hover {
+  background: rgba(76, 175, 80, 0.25) !important;
+}
+
+.rankCell {
+  text-align: center;
+  font-weight: 700;
+  font-size: 16px;
+  color: #ffd700;
+}
+
+.trophyIcon {
+  font-size: 20px;
+  color: #ffd700;
+  margin-right: 4px;
+  vertical-align: middle;
+}
+
+.statCell {
+  text-align: center;
+  font-weight: 600;
+}
+
+.returnButton {
+  min-width: 250px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  box-shadow: 0 4px 12px rgba(66, 153, 225, 0.3);
+  transition: all 0.3s ease;
+}
+
+.returnButton:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(66, 153, 225, 0.4);
+}
+
+/* Mobile responsive */
+@media (max-width: 768px) {
+  .modalContent {
+    padding: 20px;
+  }
+
+  .winnerBanner {
+    padding: 16px;
+    gap: 12px;
+  }
+
+  .winnerIcon {
+    font-size: 32px;
+  }
+
+  .winnerText {
+    font-size: 18px !important;
+  }
+
+  .matchInfo {
+    min-width: auto;
+    padding: 8px 12px;
+  }
+
+  .returnButton {
+    min-width: 200px;
+    font-size: 14px;
+  }
+}
