@@ -70,6 +70,7 @@ export class ClientEntityManager {
   private audioManager: AudioManager | null = null;
   private pickupEffects: THREE.Points[] = [];
   private gameTime: number = 0;
+  private readonly predictedMoveSpeed: number = 10;
 
   // Skill effect managers
   private teleportEffect: TeleportEffect;
@@ -357,41 +358,59 @@ export class ClientEntityManager {
             clientPlayer.bodyMesh.material.color.setHex(playerState.color);
           }
         }
+
+        const isLocalPlayer = playerState.id === myPeerId;
         
-        // Calculate velocity for prediction
         const newPos = new THREE.Vector3(
           playerState.position.x,
           playerState.position.y,
           playerState.position.z
         );
-        const timeDelta = (gameState.timestamp || Date.now()) - clientPlayer.lastUpdateTime;
-
-        if (timeDelta > 0 && !clientPlayer.isTeleporting) {
-          const posDelta = new THREE.Vector3().subVectors(newPos, clientPlayer.targetPosition);
-          clientPlayer.velocity.copy(posDelta).divideScalar(timeDelta / 1000); // Convert to units per second
-        }
-
-        // Add to position history for interpolation (keep last 3 positions)
         const timestamp = gameState.timestamp || Date.now();
-        clientPlayer.positionHistory.push({
-          position: newPos.clone(),
-          timestamp: timestamp,
-        });
 
-        // Keep only last 3 positions
-        if (clientPlayer.positionHistory.length > 3) {
-          clientPlayer.positionHistory.shift();
+        if (isLocalPlayer && !playerState.isTeleporting && !playerState.isDead) {
+          const divergence = clientPlayer.mesh.position.distanceTo(newPos);
+
+          // Only hard-correct the local player when the server drift is large.
+          if (divergence > 3) {
+            clientPlayer.mesh.position.copy(newPos);
+            clientPlayer.targetPosition.copy(newPos);
+            clientPlayer.positionHistory = [{ position: newPos.clone(), timestamp }];
+          }
+
+          clientPlayer.lastUpdateTime = timestamp;
+          clientPlayer.velocity.set(0, 0, 0);
+        } else {
+          // Calculate velocity for prediction
+          const timeDelta = timestamp - clientPlayer.lastUpdateTime;
+
+          if (timeDelta > 0 && !clientPlayer.isTeleporting) {
+            const posDelta = new THREE.Vector3().subVectors(newPos, clientPlayer.targetPosition);
+            clientPlayer.velocity.copy(posDelta).divideScalar(timeDelta / 1000); // Convert to units per second
+          }
+
+          // Add to position history for interpolation (keep last 3 positions)
+          clientPlayer.positionHistory.push({
+            position: newPos.clone(),
+            timestamp,
+          });
+
+          // Keep only last 3 positions
+          if (clientPlayer.positionHistory.length > 3) {
+            clientPlayer.positionHistory.shift();
+          }
+
+          // Update targets for interpolation
+          clientPlayer.targetPosition.copy(newPos);
+          clientPlayer.lastUpdateTime = timestamp;
         }
 
-        // Update targets for interpolation
-        clientPlayer.targetPosition.copy(newPos);
         clientPlayer.targetRotation.set(
           playerState.rotation.x,
           playerState.rotation.y,
           playerState.rotation.z,
           playerState.rotation.w
         );
-        clientPlayer.lastUpdateTime = timestamp;
         clientPlayer.teleportCooldown = playerState.teleportCooldown;
         clientPlayer.homingMissileCooldown = playerState.homingMissileCooldown;
         clientPlayer.laserBeamCooldown = playerState.laserBeamCooldown;
@@ -1171,5 +1190,50 @@ export class ClientEntityManager {
         this.items.delete(id);
       }
     }
+  }
+
+  public predictLocalMovement(direction: THREE.Vector3, deltaSeconds: number) {
+    if (!this.localPlayerId) return;
+
+    const localPlayer = this.players.get(this.localPlayerId);
+    if (!localPlayer || localPlayer.isDead || localPlayer.isTeleporting) return;
+
+    if (direction.lengthSq() <= 0.0001) return;
+
+    const moveDelta = direction.clone().setY(0).normalize().multiplyScalar(this.predictedMoveSpeed * deltaSeconds);
+    if (moveDelta.lengthSq() <= 0.000001) return;
+
+    localPlayer.previousPosition.copy(localPlayer.mesh.position);
+    localPlayer.mesh.position.add(moveDelta);
+    localPlayer.targetPosition.copy(localPlayer.mesh.position);
+    localPlayer.velocity.copy(moveDelta).divideScalar(Math.max(deltaSeconds, 0.0001));
+    localPlayer.lastUpdateTime = Date.now();
+    localPlayer.positionHistory = [{ position: localPlayer.mesh.position.clone(), timestamp: Date.now() }];
+    localPlayer.walkAnimationTime += deltaSeconds * 10;
+  }
+
+  public predictLocalMovementTowards(target: THREE.Vector3, deltaSeconds: number) {
+    if (!this.localPlayerId) return;
+
+    const localPlayer = this.players.get(this.localPlayerId);
+    if (!localPlayer || localPlayer.isDead || localPlayer.isTeleporting) return;
+
+    const direction = new THREE.Vector3().subVectors(target, localPlayer.mesh.position);
+    direction.y = 0;
+
+    if (direction.lengthSq() <= 0.0001) return;
+
+    const distance = direction.length();
+    const moveAmount = Math.min(distance, this.predictedMoveSpeed * deltaSeconds);
+    if (moveAmount <= 0) return;
+
+    const moveDelta = direction.normalize().multiplyScalar(moveAmount);
+    localPlayer.previousPosition.copy(localPlayer.mesh.position);
+    localPlayer.mesh.position.add(moveDelta);
+    localPlayer.targetPosition.copy(localPlayer.mesh.position);
+    localPlayer.velocity.copy(moveDelta).divideScalar(Math.max(deltaSeconds, 0.0001));
+    localPlayer.lastUpdateTime = Date.now();
+    localPlayer.positionHistory = [{ position: localPlayer.mesh.position.clone(), timestamp: Date.now() }];
+    localPlayer.walkAnimationTime += deltaSeconds * 10;
   }
 }

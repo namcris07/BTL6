@@ -64,6 +64,7 @@ A cyberpunk-themed multiplayer 3D ninja battle arena game where players fight in
   - Guest machine: `Join Game` and paste Host ID
 
 If you copy a link that contains `localhost`, it only works on the same machine.
+If an address like `172.21.x.x` is a virtual adapter or WSL/Docker network, it may not work from another device. Use the LAN/Wi-Fi adapter IP instead.
 
 ### Optional PeerJS Signaling Configuration
 

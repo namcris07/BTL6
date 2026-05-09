@@ -832,6 +832,13 @@ export class GameClient {
       this.sendWASDMovement();
     }
 
+    // Apply local prediction so the joining client doesn't wait for server ticks.
+    if (this.isWASDMoving) {
+      this.entityManager.predictLocalMovement(this.wasdDirection, clampedDelta);
+    } else if (this.pendingMovementTarget && this.isLeftMouseDown) {
+      this.entityManager.predictLocalMovementTowards(this.pendingMovementTarget, clampedDelta);
+    }
+
     // Update Entities (Interpolation)
     this.entityManager.update(clampedDelta);
 
