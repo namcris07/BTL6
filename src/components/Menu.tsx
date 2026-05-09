@@ -46,6 +46,9 @@ export default function Menu({ networkManager, gameClient }: MenuProps) {
   const joinTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const menuMusicStartedRef = useRef(false);
 
+  const isLocalhostInvite =
+    window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
+
   const handleJoinGame = useCallback(
     (input: string) => {
       let hostIdToJoin = input.trim();
@@ -431,6 +434,11 @@ export default function Menu({ networkManager, gameClient }: MenuProps) {
     >
       <Stack gap="md">
         <Text size="sm">Share this ID with your friends so they can join your game.</Text>
+        {isLocalhostInvite && (
+          <Text size="xs" c="orange">
+            You are running on localhost. Other devices should open your LAN IP address first, then join with this Host ID.
+          </Text>
+        )}
 
         <Group>
           <TextInput value={hostId} readOnly style={{ flex: 1 }} />

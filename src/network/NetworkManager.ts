@@ -2,12 +2,53 @@ import Peer from 'peerjs';
 import type { DataConnection } from 'peerjs';
 import type { NetworkMessage } from '../common/messages';
 
+const DEFAULT_ICE_SERVERS: RTCIceServer[] = [
+  { urls: 'stun:stun.l.google.com:19302' },
+  { urls: 'stun:stun1.l.google.com:19302' },
+  { urls: 'stun:stun2.l.google.com:19302' },
+];
+
+function toOptionalNumber(value: string | undefined): number | undefined {
+  if (!value) return undefined;
+  const parsed = Number(value);
+  return Number.isFinite(parsed) ? parsed : undefined;
+}
+
 export class NetworkManager {
   private peer: Peer;
   private connections: DataConnection[] = [];
   private _isHost: boolean = false;
   private _playerName: string = '';
   private _playerAvatar: string | null = null;
+
+  private createPeer(): Peer {
+    const env = import.meta.env;
+
+    const configuredHost = env.VITE_PEER_HOST?.trim();
+    const configuredPort = toOptionalNumber(env.VITE_PEER_PORT);
+    const configuredPath = env.VITE_PEER_PATH?.trim() || '/';
+    const configuredSecure = env.VITE_PEER_SECURE;
+    const configuredDebug = toOptionalNumber(env.VITE_PEER_DEBUG);
+
+    const peerOptions: ConstructorParameters<typeof Peer>[1] = {
+      debug: configuredDebug ?? 1,
+      config: {
+        iceServers: DEFAULT_ICE_SERVERS,
+      },
+    };
+
+    if (configuredHost) {
+      peerOptions.host = configuredHost;
+      peerOptions.port = configuredPort ?? 443;
+      peerOptions.path = configuredPath;
+      peerOptions.secure =
+        configuredSecure != null
+          ? configuredSecure.toLowerCase() === 'true'
+          : window.location.protocol === 'https:';
+    }
+
+    return new Peer(peerOptions);
+  }
 
   public get isHost(): boolean {
     return this._isHost;
@@ -43,7 +84,7 @@ export class NetworkManager {
   }
 
   constructor() {
-    this.peer = new Peer();
+    this.peer = this.createPeer();
     this.setupPeerEvents();
   }
 
@@ -136,7 +177,7 @@ export class NetworkManager {
     }
     
     // Create new peer for reconnection
-    this.peer = new Peer();
+    this.peer = this.createPeer();
     this.setupPeerEvents();
   }
 

@@ -48,6 +48,35 @@ A cyberpunk-themed multiplayer 3D ninja battle arena game where players fight in
 
 4. Open your browser and navigate to `http://localhost:3000`
 
+## Multiplayer On 2 Different Machines (LAN)
+
+1. Start host machine with:
+  ```bash
+  pnpm dev
+  ```
+2. Find host machine LAN IP (example: `192.168.1.10`) and open:
+  ```
+  http://192.168.1.10:3000
+  ```
+3. On guest machine, open the same LAN URL above.
+4. In game menu:
+  - Host machine: `Host Game` and share Host ID
+  - Guest machine: `Join Game` and paste Host ID
+
+If you copy a link that contains `localhost`, it only works on the same machine.
+
+### Optional PeerJS Signaling Configuration
+
+By default, PeerJS cloud signaling is used. You can override it with Vite env vars:
+
+```bash
+VITE_PEER_HOST=your-peer-server-host
+VITE_PEER_PORT=443
+VITE_PEER_PATH=/
+VITE_PEER_SECURE=true
+VITE_PEER_DEBUG=1
+```
+
 ## Building for Production
 
 ```bash
