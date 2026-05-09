@@ -1200,16 +1200,14 @@ export class ClientEntityManager {
 
     if (direction.lengthSq() <= 0.0001) return;
 
-    const moveDelta = direction.clone().setY(0).normalize().multiplyScalar(this.predictedMoveSpeed * deltaSeconds);
+    const moveDelta = direction
+      .clone()
+      .setY(0)
+      .normalize()
+      .multiplyScalar(this.predictedMoveSpeed * deltaSeconds);
     if (moveDelta.lengthSq() <= 0.000001) return;
 
-    localPlayer.previousPosition.copy(localPlayer.mesh.position);
-    localPlayer.mesh.position.add(moveDelta);
-    localPlayer.targetPosition.copy(localPlayer.mesh.position);
-    localPlayer.velocity.copy(moveDelta).divideScalar(Math.max(deltaSeconds, 0.0001));
-    localPlayer.lastUpdateTime = Date.now();
-    localPlayer.positionHistory = [{ position: localPlayer.mesh.position.clone(), timestamp: Date.now() }];
-    localPlayer.walkAnimationTime += deltaSeconds * 10;
+    this.moveLocalPlayerWithCollision(localPlayer, moveDelta, deltaSeconds);
   }
 
   public predictLocalMovementTowards(target: THREE.Vector3, deltaSeconds: number) {
@@ -1228,12 +1226,57 @@ export class ClientEntityManager {
     if (moveAmount <= 0) return;
 
     const moveDelta = direction.normalize().multiplyScalar(moveAmount);
-    localPlayer.previousPosition.copy(localPlayer.mesh.position);
-    localPlayer.mesh.position.add(moveDelta);
-    localPlayer.targetPosition.copy(localPlayer.mesh.position);
-    localPlayer.velocity.copy(moveDelta).divideScalar(Math.max(deltaSeconds, 0.0001));
-    localPlayer.lastUpdateTime = Date.now();
-    localPlayer.positionHistory = [{ position: localPlayer.mesh.position.clone(), timestamp: Date.now() }];
-    localPlayer.walkAnimationTime += deltaSeconds * 10;
+    this.moveLocalPlayerWithCollision(localPlayer, moveDelta, deltaSeconds);
+  }
+
+  private moveLocalPlayerWithCollision(
+    player: ClientPlayer,
+    moveDelta: THREE.Vector3,
+    deltaSeconds: number
+  ) {
+    const currentPosition = player.mesh.position.clone();
+    const nextPosition = currentPosition.clone();
+
+    const nextX = currentPosition.clone();
+    nextX.x += moveDelta.x;
+    if (!this.isBlockedByStaticGeometry(nextX)) {
+      nextPosition.x = nextX.x;
+    }
+
+    const nextZ = nextPosition.clone();
+    nextZ.z += moveDelta.z;
+    if (!this.isBlockedByStaticGeometry(nextZ)) {
+      nextPosition.z = nextZ.z;
+    }
+
+    if (nextPosition.distanceTo(currentPosition) <= 0.000001) {
+      player.velocity.set(0, 0, 0);
+      return;
+    }
+
+    player.previousPosition.copy(currentPosition);
+    player.mesh.position.copy(nextPosition);
+    player.targetPosition.copy(nextPosition);
+    player.velocity.copy(nextPosition.clone().sub(currentPosition)).divideScalar(Math.max(deltaSeconds, 0.0001));
+    player.lastUpdateTime = Date.now();
+    player.positionHistory = [{ position: nextPosition.clone(), timestamp: Date.now() }];
+    player.walkAnimationTime += deltaSeconds * 10;
+  }
+
+  private isBlockedByStaticGeometry(position: THREE.Vector3): boolean {
+    const playerBox = new THREE.Box3().setFromCenterAndSize(
+      position.clone().add(new THREE.Vector3(0, 1, 0)),
+      new THREE.Vector3(1, 2, 1)
+    );
+
+    const colliders = [...this.walls, ...this.boxes];
+    for (const collider of colliders) {
+      const colliderBox = new THREE.Box3().setFromObject(collider.mesh);
+      if (playerBox.intersectsBox(colliderBox)) {
+        return true;
+      }
+    }
+
+    return false;
   }
 }
