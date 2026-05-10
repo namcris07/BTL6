@@ -22,9 +22,6 @@ export class ItemEffect {
       case ItemType.HEALTH_PACK:
         this.createHealthPackMesh(group, config.color);
         break;
-      case ItemType.SPEED_BOOST:
-        this.createSpeedBoostMesh(group, config.color);
-        break;
       case ItemType.DAMAGE_BOOST:
         this.createDamageBoostMesh(group, config.color);
         break;
@@ -73,37 +70,6 @@ export class ItemEffect {
     group.add(base);
   }
 
-  /**
-   * Speed Boost - Blue lightning bolt / arrow shape
-   */
-  private createSpeedBoostMesh(group: THREE.Group, color: number): void {
-    const material = new THREE.MeshStandardMaterial({
-      color,
-      emissive: color,
-      emissiveIntensity: 0.5,
-      metalness: 0.3,
-      roughness: 0.4,
-    });
-
-    // Arrow/chevron shape using triangular prism
-    const shape = new THREE.Shape();
-    shape.moveTo(0, 0.5);
-    shape.lineTo(-0.3, 0);
-    shape.lineTo(-0.15, 0);
-    shape.lineTo(-0.15, -0.4);
-    shape.lineTo(0.15, -0.4);
-    shape.lineTo(0.15, 0);
-    shape.lineTo(0.3, 0);
-    shape.closePath();
-
-    const extrudeSettings = { depth: 0.2, bevelEnabled: false };
-    const geometry = new THREE.ExtrudeGeometry(shape, extrudeSettings);
-    geometry.center();
-
-    const mesh = new THREE.Mesh(geometry, material);
-    mesh.rotation.x = -Math.PI / 2;
-    group.add(mesh);
-  }
 
   /**
    * Damage Boost - Red/orange flame shape

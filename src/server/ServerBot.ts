@@ -62,7 +62,7 @@ export class ServerBot extends ServerPlayer {
    */
   public think(entityManager: ServerEntityManager): void {
     // Don't think if dead or frozen
-    if (this.isDead || this.isFrozen) return;
+    if (this.isDead) return;
 
     const now = Date.now();
 

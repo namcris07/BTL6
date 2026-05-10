@@ -6,7 +6,6 @@ export const GameMode = {
   WARMUP: 'WARMUP',
   WARMUP_COUNTDOWN: 'WARMUP_COUNTDOWN',
   ROUND: 'ROUND',
-  FREEZE_TIME: 'FREEZE_TIME',
   ROUND_END: 'ROUND_END',
   GAME_OVER: 'GAME_OVER',
 } as const;
@@ -16,13 +15,12 @@ export type GameMode = (typeof GameMode)[keyof typeof GameMode];
 // Game Settings
 export const GAME_CONFIG = {
   ROUNDS_TO_WIN: 15,
-  WARMUP_COUNTDOWN_DURATION: 10000, // 10 seconds
-  FREEZE_TIME_DURATION: 5000, // 5 seconds
+  WARMUP_COUNTDOWN_DURATION: 5000, // 5 seconds
   ROUND_END_DURATION: 3000, // 3 seconds
   MIN_PLAYERS_TO_START: 2,
-  MATCH_TIMER_DURATION: 90000, // 1:30 (90 seconds) in milliseconds
+  MATCH_TIMER_DURATION: 60000, // 1:00 (60 seconds) in milliseconds
   TARGET_SCORE_MULTIPLIER: 2,
-  GAME_OVER_RETURN_DELAY: 10000, // 10 seconds before returning to lobby
+  GAME_OVER_RETURN_DELAY: 5000, // 5 seconds before returning to lobby
 };
 
 export const SkillType = {
@@ -58,7 +56,6 @@ export const BOT_CONFIG = {
 // Item Types
 export const ItemType = {
   HEALTH_PACK: 'HEALTH_PACK',
-  SPEED_BOOST: 'SPEED_BOOST',
   DAMAGE_BOOST: 'DAMAGE_BOOST',
   SHIELD: 'SHIELD',
 } as const;
@@ -72,12 +69,6 @@ export const ITEM_CONFIG = {
     duration: 0, // Instant
     respawnTime: 15000, // 15 seconds
     color: 0x00ff00, // Green
-  },
-  [ItemType.SPEED_BOOST]: {
-    speedMultiplier: 1.5,
-    duration: 5000, // 5 seconds
-    respawnTime: 20000,
-    color: 0x00aaff, // Blue
   },
   [ItemType.DAMAGE_BOOST]: {
     damageMultiplier: 1.5,

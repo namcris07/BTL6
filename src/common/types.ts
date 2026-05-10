@@ -35,7 +35,6 @@ export interface PlayerState {
   isAttacking: boolean;
   attackDirection?: Vector3;
   isDead: boolean;
-  isFrozen?: boolean;
   kills?: number;
   deaths?: number;
   lastPlayerAlive?: number;
@@ -44,6 +43,7 @@ export interface PlayerState {
   hasShield?: boolean;
   lastDamageTime?: number;
   lastDamageAmount?: number;
+  speed?: number;
 }
 
 export interface MissileState {
@@ -84,7 +84,7 @@ export interface GameState {
   gameMode: string;
   currentRound: number;
   totalRounds: number;
-  freezeTimeEnd?: number;
+  lobbyReturnTime?: number;
   winnerId?: string;
   roundWinnerId?: string;
   matchStartTime?: number;

@@ -12,10 +12,6 @@ interface ActiveEffectsProps {
 }
 
 const EFFECT_CONFIG: Record<string, { icon: string; style?: React.CSSProperties }> = {
-  [ItemType.SPEED_BOOST]: { 
-    icon: 'fluent-emoji:japanese-symbol-for-beginner',
-    style: { transform: 'rotate(-90deg)' }
-  },
   [ItemType.DAMAGE_BOOST]: { icon: 'fluent-emoji:fire' },
   [ItemType.SHIELD]: { icon: 'fluent-emoji:shield' },
   [ItemType.HEALTH_PACK]: { icon: 'fluent-emoji:green-heart' },

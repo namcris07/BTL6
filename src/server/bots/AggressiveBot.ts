@@ -90,8 +90,8 @@ export class AggressiveBot implements BotBrain {
       };
     }
 
-    // Look for offensive items (speed boost, damage boost) if nearby
-    const desiredItems = [ItemType.SPEED_BOOST, ItemType.DAMAGE_BOOST];
+    // Look for offensive items (damage boost) if nearby
+    const desiredItems = [ItemType.DAMAGE_BOOST];
     const items = entityManager.getItems();
     let nearestItem: { position: THREE.Vector3; distance: number } | null = null;
     let nearestItemDist = BOT_CONFIG.ITEM_SEARCH_RANGE * 0.5; // Aggressive bots only grab very close items

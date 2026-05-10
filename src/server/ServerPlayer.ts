@@ -27,7 +27,6 @@ export class ServerPlayer {
   public isInvulnerable: boolean = false;
   private invulnerableTimer: number = 0;
   public isDead: boolean = false;
-  public isFrozen: boolean = false;
 
   // Stats
   public kills: number = 0;
@@ -127,7 +126,7 @@ export class ServerPlayer {
     }
 
     // Don't update movement if player is frozen or dead
-    if (this.isFrozen || this.isDead) {
+    if (this.isDead) {
       return;
     }
 
@@ -536,7 +535,7 @@ export class ServerPlayer {
   }
 
   public performAttack(direction: Vector3, otherPlayers: ServerPlayer[]): ServerPlayer[] {
-    if (this.isDead || this.isFrozen) return [];
+    if (this.isDead) return [];
     const now = Date.now();
     if (now < this.attackCooldown) {
       return [];
@@ -604,7 +603,6 @@ export class ServerPlayer {
     this.isInvulnerable = false;
     this.invulnerableTimer = 0;
     this.isDead = false;
-    this.isFrozen = false;
     this.respawnTime = 0;
 
     // Reset movement
@@ -638,17 +636,6 @@ export class ServerPlayer {
       case ItemType.HEALTH_PACK:
         // Instant heal
         this.health = Math.min(this.maxHealth, this.health + config.healAmount);
-        break;
-
-      case ItemType.SPEED_BOOST:
-        // Remove existing speed boost
-        this.activeEffects = this.activeEffects.filter(e => e.type !== ItemType.SPEED_BOOST);
-        // Add new speed boost
-        this.activeEffects.push({
-          type: ItemType.SPEED_BOOST,
-          expiresAt: now + config.duration,
-        });
-        this.speed = this.baseSpeed * config.speedMultiplier;
         break;
 
       case ItemType.DAMAGE_BOOST:
@@ -685,9 +672,6 @@ export class ServerPlayer {
     
     for (const effect of expiredEffects) {
       switch (effect.type) {
-        case ItemType.SPEED_BOOST:
-          this.speed = this.baseSpeed;
-          break;
         case ItemType.SHIELD:
           this.hasShield = false;
           break;
@@ -736,7 +720,6 @@ export class ServerPlayer {
       isAttacking: this.isAttacking,
       attackDirection: this.attackDirection ? { x: this.attackDirection.x, y: this.attackDirection.y, z: this.attackDirection.z } : undefined,
       isDead: this.isDead,
-      isFrozen: this.isFrozen,
       kills: this.kills,
       deaths: this.deaths,
       lastPlayerAlive: this.lastPlayerAlive,
@@ -745,6 +728,7 @@ export class ServerPlayer {
       hasShield: this.hasShield,
       lastDamageTime: this.lastDamageTime > 0 ? this.lastDamageTime : undefined,
       lastDamageAmount: this.lastDamageAmount > 0 ? this.lastDamageAmount : undefined,
+      speed: this.speed,
     };
   }
 }

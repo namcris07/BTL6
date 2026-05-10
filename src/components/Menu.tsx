@@ -378,48 +378,7 @@ export default function Menu({ networkManager, gameClient }: MenuProps) {
   );
 
   // Render the credits content
-  const renderCreditsContent = () => (
-    <Stack gap="md">
-      <Title order={2} ta="center">
-        Credits
-      </Title>
-
-      <Paper p="md" withBorder>
-        <Stack gap="md">
-          <Stack gap={0}>
-            <Text fw={700}>Quang Phu</Text>
-            <Text size="sm" c="dimmed">
-              pdz1804
-            </Text>
-          </Stack>
-
-          <Stack gap={0}>
-            <Text fw={700}>Ngoc Khoi</Text>
-            <Text size="sm" c="dimmed">
-              Frankie2030
-            </Text>
-          </Stack>
-
-          <Stack gap={0}>
-            <Text fw={700}>Bao Le</Text>
-            <Text size="sm" c="dimmed">
-              baroleex04
-            </Text>
-          </Stack>
-          <Stack gap={0}>
-            <Text fw={700}>Minh Khoi</Text>
-            <Text size="sm" c="dimmed">
-              ngmikhoi
-            </Text>
-          </Stack>
-        </Stack>
-      </Paper>
-
-      <Button variant="light" onClick={() => setActiveTab('main')} fullWidth>
-        Back to Menu
-      </Button>
-    </Stack>
-  );
+  // Credits removed per request
 
   // Render the host menu modal
   const renderHostMenu = () => (
@@ -597,8 +556,7 @@ export default function Menu({ networkManager, gameClient }: MenuProps) {
         return renderSettingsContent();
       case 'howtoplay':
         return renderHowToPlayContent();
-      case 'credits':
-        return renderCreditsContent();
+      // credits tab removed
       case 'singleplayer':
         return (
           <SinglePlayerMenu
@@ -629,9 +587,7 @@ export default function Menu({ networkManager, gameClient }: MenuProps) {
               How to Play
             </Button>
 
-            <Button size="lg" variant="light" onClick={() => setActiveTab('credits')}>
-              Credits
-            </Button>
+            {/* Credits removed */}
           </Stack>
         );
     }

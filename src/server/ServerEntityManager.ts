@@ -125,7 +125,6 @@ export class ServerEntityManager {
   private spawnInitialItems(): void {
     const itemTypes = [
       ItemType.HEALTH_PACK,
-      ItemType.SPEED_BOOST,
       ItemType.DAMAGE_BOOST,
       ItemType.SHIELD,
     ];

@@ -16,7 +16,7 @@ export class GameServer {
   private gameMode: string = GameMode.WARMUP;
   private currentRound: number = 0;
   private totalRounds: number = GAME_CONFIG.ROUNDS_TO_WIN;
-  private freezeTimeEnd: number = 0;
+  private lobbyReturnTime: number = 0;
   private winnerId: string | undefined = undefined;
   private roundWinnerId: string | undefined = undefined;
   private playerRespawnEnabled: boolean = true; // In warmup mode, respawn is enabled
@@ -190,7 +190,7 @@ export class GameServer {
         const p = this.entityManager.getPlayer(playerId);
         if (p) {
           // Don't process input if player is dead or frozen
-          if (p.isDead || p.isFrozen) {
+          if (p.isDead) {
             return;
           }
 
@@ -276,7 +276,7 @@ export class GameServer {
           gameMode: this.gameMode,
           currentRound: this.currentRound,
           totalRounds: this.totalRounds,
-          freezeTimeEnd: this.freezeTimeEnd > 0 ? this.freezeTimeEnd : undefined,
+          lobbyReturnTime: this.lobbyReturnTime > 0 ? this.lobbyReturnTime : undefined,
           winnerId: this.winnerId,
           roundWinnerId: this.roundWinnerId,
         };
@@ -343,7 +343,6 @@ export class GameServer {
       gameMode: this.gameMode,
       currentRound: this.currentRound,
       totalRounds: this.totalRounds,
-      freezeTimeEnd: this.freezeTimeEnd > 0 ? this.freezeTimeEnd : undefined,
       winnerId: this.winnerId,
       roundWinnerId: this.roundWinnerId,
       matchStartTime: this.matchStartTime > 0 ? this.matchStartTime : undefined,
@@ -366,13 +365,8 @@ export class GameServer {
     const now = Date.now();
 
 
-    // Handle warmup countdown transition
+    // Handle warmup countdown transition - go directly to ROUND
     if (this.gameMode === GameMode.WARMUP_COUNTDOWN && now > this.warmupEndTime) {
-      this.startFreezeTime();
-    }
-
-    // Handle freeze time transition
-    if (this.gameMode === GameMode.FREEZE_TIME && now > this.freezeTimeEnd) {
       this.gameMode = GameMode.ROUND;
       this.matchStartTime = now;
       
@@ -381,11 +375,19 @@ export class GameServer {
         this.matchEndTime = this.matchStartTime + GAME_CONFIG.MATCH_TIMER_DURATION;
       }
       
-      // Enable player movement after freeze time
+      // Reset all players and respawn them at their assigned spawn points
       this.entityManager.getPlayers().forEach(player => {
-        player.isFrozen = false;
-        player.kills = 0; // Reset kills for the match
-        player.deaths = 0; // Reset deaths for the match
+        player.reset();
+        player.aliveStartTime = now;
+
+        // Respawn player at their assigned spawn point
+        const spawnIndex = this.entityManager.getSpawnPointForPlayer(player.id);
+        if (spawnIndex !== -1) {
+          const spawnPos = this.entityManager.getSpawnPosition(spawnIndex);
+          if (spawnPos) {
+            player.position.set(spawnPos.x, 0, spawnPos.y);
+          }
+        }
       });
     }
 
@@ -413,7 +415,7 @@ export class GameServer {
           this.winnerId = player.id;
           this.matchEndTime = now;
           this.endReason = 'target';
-          this.freezeTimeEnd = now + GAME_CONFIG.GAME_OVER_RETURN_DELAY;
+          this.lobbyReturnTime = now + GAME_CONFIG.GAME_OVER_RETURN_DELAY;
           return;
         }
       }
@@ -436,7 +438,7 @@ export class GameServer {
       this.gameMode = GameMode.GAME_OVER;
       this.winnerId = winner.id;
       this.endReason = 'timer';
-      this.freezeTimeEnd = now + GAME_CONFIG.GAME_OVER_RETURN_DELAY;
+      this.lobbyReturnTime = now + GAME_CONFIG.GAME_OVER_RETURN_DELAY;
       return;
     }
 
@@ -446,27 +448,6 @@ export class GameServer {
     // User must manually return to lobby via ResultsScreen button
   }
 
-  private startFreezeTime() {
-    this.gameMode = GameMode.FREEZE_TIME;
-    this.freezeTimeEnd = Date.now() + GAME_CONFIG.FREEZE_TIME_DURATION;
-
-    // Reset all players and respawn them at their assigned spawn points
-    this.entityManager.getPlayers().forEach(player => {
-      player.reset();
-      player.isFrozen = true; // Freeze players during freeze time
-      player.aliveStartTime = Date.now(); // Start tracking alive time
-
-      // Respawn player at their assigned spawn point
-      const spawnIndex = this.entityManager.getSpawnPointForPlayer(player.id);
-      if (spawnIndex !== -1) {
-        const spawnPos = this.entityManager.getSpawnPosition(spawnIndex);
-        if (spawnPos) {
-          // Set position to spawn point
-          player.position.set(spawnPos.x, 0, spawnPos.y);
-        }
-      }
-    });
-  }
 
   public startGame(useTimer: boolean = false) {
     // In offline mode, allow starting with just 1 human player + bots
@@ -480,8 +461,6 @@ export class GameServer {
     // Start with warmup countdown (10 seconds)
     this.gameMode = GameMode.WARMUP_COUNTDOWN;
     this.warmupEndTime = Date.now() + GAME_CONFIG.WARMUP_COUNTDOWN_DURATION;
-    // this.gameMode = GameMode.FREEZE_TIME;
-    // this.freezeTimeEnd = Date.now() + GAME_CONFIG.FREEZE_TIME_DURATION;
     this.useTimerMode = useTimer;
     this.currentRound = 1;
     this.playerRespawnEnabled = true; // Enable respawn in round mode
@@ -496,7 +475,6 @@ export class GameServer {
       player.kills = 0;
       player.deaths = 0;
       player.lastPlayerAlive = 0;
-      player.isFrozen = false; // Allow movement during countdown
     });
 
     return true;
@@ -521,7 +499,6 @@ export class GameServer {
     // Reset all players
     this.entityManager.getPlayers().forEach(player => {
       player.reset();
-      player.isFrozen = false;
       player.kills = 0;
       player.deaths = 0;
       player.lastPlayerAlive = 0;

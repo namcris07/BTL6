@@ -202,8 +202,8 @@ export class BalancedBot implements BotBrain {
 
     // Look for items based on current mode
     const desiredItems = isAggressive 
-      ? [ItemType.SPEED_BOOST, ItemType.DAMAGE_BOOST]
-      : [ItemType.HEALTH_PACK, ItemType.SPEED_BOOST, ItemType.SHIELD];
+      ? [ItemType.DAMAGE_BOOST]
+      : [ItemType.HEALTH_PACK, ItemType.SHIELD];
     const items = entityManager.getItems();
     let nearestItem: { position: THREE.Vector3; distance: number } | null = null;
     let nearestItemDist = BOT_CONFIG.ITEM_SEARCH_RANGE;

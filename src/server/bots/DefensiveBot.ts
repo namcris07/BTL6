@@ -147,8 +147,8 @@ export class DefensiveBot implements BotBrain {
       }
     }
 
-    // Look for defensive items (health, speed boost, shield)
-    const desiredItems = [ItemType.HEALTH_PACK, ItemType.SPEED_BOOST, ItemType.SHIELD];
+    // Look for defensive items (health, shield)
+    const desiredItems = [ItemType.HEALTH_PACK, ItemType.SHIELD];
     const items = entityManager.getItems();
     let nearestItem: { position: THREE.Vector3; distance: number } | null = null;
     let nearestItemDist = BOT_CONFIG.ITEM_SEARCH_RANGE;

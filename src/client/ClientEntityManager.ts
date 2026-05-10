@@ -378,8 +378,14 @@ export class ClientEntityManager {
             clientPlayer.positionHistory = [{ position: newPos.clone(), timestamp }];
           }
 
-          clientPlayer.lastUpdateTime = timestamp;
-          clientPlayer.velocity.set(0, 0, 0);
+            clientPlayer.lastUpdateTime = timestamp;
+            clientPlayer.velocity.set(0, 0, 0);
+
+            // If this is the local player and server reports a speed, use it for prediction
+            if (playerState.id === myPeerId && (playerState as any).speed) {
+              // Update predicted move speed to match server (prevents jitter when speed boost applied)
+              this.predictedMoveSpeed = (playerState as any).speed;
+            }
         } else {
           // Calculate velocity for prediction
           const timeDelta = timestamp - clientPlayer.lastUpdateTime;

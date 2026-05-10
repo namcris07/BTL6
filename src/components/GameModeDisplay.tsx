@@ -54,30 +54,6 @@ export default function GameModeDisplay({ gameState, visible, isHost, onStartGam
         modeText = 'Game Starting...';
       }
       break;
-    case GameMode.FREEZE_TIME:
-      // Calculate remaining seconds in freeze time
-      if (gameState.freezeTimeEnd) {
-        const now = Date.now();
-        const remainingMs = Math.max(0, gameState.freezeTimeEnd - now);
-        const remainingSeconds = Math.ceil(remainingMs / 1000);
-        modeText = `Freeze Time (${remainingSeconds}s)`;
-      } else {
-        modeText = 'Freeze Time';
-      }
-      // Show match timer if available
-      if (gameState.matchEndTime) {
-        const now = Date.now();
-        const matchRemainingMs = Math.max(0, gameState.matchEndTime - now);
-        const matchRemainingSeconds = Math.ceil(matchRemainingMs / 1000);
-        const minutes = Math.floor(matchRemainingSeconds / 60);
-        const seconds = matchRemainingSeconds % 60;
-        modeText += ` | Match Time: ${minutes}:${seconds.toString().padStart(2, '0')}`;
-      }
-      // Show target score if available
-      // if (gameState.targetScore) {
-      //   modeText += ` | Target: ${gameState.targetScore} kills`;
-      // }
-      break;
     case GameMode.ROUND:
       // Always show timer if matchEndTime exists, or show round info
       if (gameState.matchEndTime) {
@@ -103,9 +79,9 @@ export default function GameModeDisplay({ gameState, visible, isHost, onStartGam
         const winner = gameState.players.find(p => p.id === gameState.roundWinnerId);
         if (winner) {
           // Calculate remaining seconds in round end
-          if (gameState.freezeTimeEnd) {
+          if (gameState.lobbyReturnTime) {
             const now = Date.now();
-            const remainingMs = Math.max(0, gameState.freezeTimeEnd - now);
+            const remainingMs = Math.max(0, gameState.lobbyReturnTime - now);
             const remainingSeconds = Math.ceil(remainingMs / 1000);
             modeText = `Round ${gameState.currentRound - 1}/${gameState.totalRounds} - Player ${winner.username || winner.id.substring(0, 4)} Wins! (${remainingSeconds}s)`;
           } else {
@@ -126,9 +102,9 @@ export default function GameModeDisplay({ gameState, visible, isHost, onStartGam
           : 'Game Over';
         
         // Show countdown to return to lobby
-        if (gameState.freezeTimeEnd) {
+        if (gameState.lobbyReturnTime) {
           const now = Date.now();
-          const remainingMs = Math.max(0, gameState.freezeTimeEnd - now);
+          const remainingMs = Math.max(0, gameState.lobbyReturnTime - now);
           const remainingSeconds = Math.ceil(remainingMs / 1000);
           if (remainingSeconds > 0) {
             winnerText += ` (Returning to lobby in ${remainingSeconds}s)`;

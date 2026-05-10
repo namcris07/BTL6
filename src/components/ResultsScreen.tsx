@@ -38,10 +38,10 @@ export default function ResultsScreen({
   
   // Auto-return to lobby after countdown
   useEffect(() => {
-    if (!gameState || !opened || !gameState.freezeTimeEnd) return;
+    if (!gameState || !opened || !gameState.lobbyReturnTime) return;
 
     const now = Date.now();
-    const delay = gameState.freezeTimeEnd - now;
+    const delay = gameState.lobbyReturnTime - now;
 
     if (delay > 0) {
       const timer = setTimeout(() => {
@@ -96,7 +96,7 @@ export default function ResultsScreen({
 
   // Calculate countdown to lobby return
   const now = Date.now();
-  const remainingMs = gameState.freezeTimeEnd ? Math.max(0, gameState.freezeTimeEnd - now) : 0;
+  const remainingMs = gameState.lobbyReturnTime ? Math.max(0, gameState.lobbyReturnTime - now) : 0;
   const remainingSeconds = Math.ceil(remainingMs / 1000);
 
   const rows = sortedPlayers.map((player, index) => {
